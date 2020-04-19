@@ -30,7 +30,7 @@ Part of DCC++ BASE STATION for the Arduino
 //  1 = Arduino.cc Ethernet/SD-Card Shield
 //  2 = Arduino.org Ethernet/SD-Card Shield
 //  3 = Seeed Studio Ethernet/SD-Card Shield W5200
-//  4 = Build-in Serial Port for status.  Serial3 for control by ESP-01/iPhone/WiThrottle.
+//  4 = Build-in Serial Port for status.  Serial3 for control by ESP-01/iPhone/WiThrottle with shift registers and turnout output to MOSFET's.
 
 #define COMM_INTERFACE   4
 

@@ -14,6 +14,7 @@ Hardware:
   DF Player Mini (MPE) - Serial1 - 4.2v input from 5v->4.2v voltage controller
   Deek-Robot Motor Shield - 9v input
   Toshiba ULN2803 Darlington Relays (x3) - 12v temporary (200ms) activation of track switch solenoids
+  Darlintons replaced by MOSFET's due to excessive voltage drop negatively affecting turnout solendoids >40cm from controller
   Texas Instruments 74HC595 8 bit Shift Registers (x4) - 5v continuous energizing of track switch LED's
   TalentCell Rechargeable 72W 132 WH 12/9/5v battery supply
 

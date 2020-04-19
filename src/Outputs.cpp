@@ -218,39 +218,55 @@ void Output::load(){
   struct OutputData data;
   Output *tt;
 
-  if (Serial){
-    Serial.print("<Loading pins as output: ");
-  }
+  #if COMM_INTERFACE == 4 // ESP8266, shift registers and output to MOSFET's
 
-  pinMode(latchPin, OUTPUT);
-  pinMode(clockPin, OUTPUT);
-  pinMode(dataPin, OUTPUT);
-
-  for(int i=0;i<EEStore::eeStore->data.nOutputs;i++){
-    EEPROM.get(EEStore::pointer(),data);
-    tt=create(data.id,data.pin,data.iFlag);
-
-    tt->data.oStatus=bitRead(tt->data.iFlag,1)?bitRead(tt->data.iFlag,2):data.oStatus;      // restore status to EEPROM value is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag
-    int pinOutEven = tt->data.pin;
-    int pinOutOdd = pinOutEven+1;
-
-    if (Serial) {
-      if (i>0) Serial.print(", ");
-      Serial.print(pinOutEven);
-
+    if (Serial){
+      Serial.print("Loading pins as output: ");
     }
 
-    pinMode(pinOutEven,OUTPUT);
-    pinMode(pinOutOdd,OUTPUT);
+    pinMode(latchPin, OUTPUT);
+    pinMode(clockPin, OUTPUT);
+    pinMode(dataPin, OUTPUT);
 
-    Output::signal(data.oStatus, data.id, data.pin, data.iFlag);
+    for(int i=0;i<EEStore::eeStore->data.nOutputs;i++){
+      EEPROM.get(EEStore::pointer(),data);
+      tt=create(data.id,data.pin,data.iFlag);
 
-    tt->num=EEStore::pointer();
-    EEStore::advance(sizeof(tt->data));
-  }
-  if (Serial) {
-    Serial.println(">");
-  }
+      tt->data.oStatus=bitRead(tt->data.iFlag,1)?bitRead(tt->data.iFlag,2):data.oStatus;      // restore status to EEPROM value is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag
+      int pinOutEven = tt->data.pin;
+      int pinOutOdd = pinOutEven+1;
+
+      if (Serial) {
+        if (i>0) Serial.print(", ");
+        Serial.print(pinOutEven);
+
+      }
+
+      pinMode(pinOutEven,OUTPUT);
+      pinMode(pinOutOdd,OUTPUT);
+
+      Output::signal(data.oStatus, data.id, data.pin, data.iFlag);
+
+      tt->num=EEStore::pointer();
+      EEStore::advance(sizeof(tt->data));
+    }
+    if (Serial) {
+      Serial.println();
+    }
+
+  #else
+
+    for(int i=0;i<EEStore::eeStore->data.nOutputs;i++){
+      EEPROM.get(EEStore::pointer(),data);
+      tt=create(data.id,data.pin,data.iFlag);
+      tt->data.oStatus=bitRead(tt->data.iFlag,1)?bitRead(tt->data.iFlag,2):data.oStatus;      // restore status to EEPROM value is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag
+      digitalWrite(tt->data.pin,tt->data.oStatus ^ bitRead(tt->data.iFlag,0));
+      pinMode(tt->data.pin,OUTPUT);
+      tt->num=EEStore::pointer();
+      EEStore::advance(sizeof(tt->data));
+    }
+
+  #endif
 
 }
 
