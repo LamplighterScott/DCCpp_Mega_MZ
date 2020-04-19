@@ -1,6 +1,5 @@
-This is a branched sketch of the DCC++ for a Marklin Z layout using a mega controller.
+This is a branched sketch of the DCC++ for a Marklin Z layout using a mega controller, ESP8266 WiFi, shift registers for turnout signals and MOSFETs for driving turnout solenoids.
 
-These files are for using the Atom IDE to upload the DCC++ sketch up to an Arduino Mega assuming the following.
 For the Arduino IDE, download or clone all the the files in the folder "src" and target the DCCpp_Mega_MZ.ino file
 for starting the upload.
 
@@ -17,4 +16,45 @@ for starting the upload.
 *  A14 (aka pin 68 for shiftOut function) connected to ST_Cp of 74HC595 - latch pin
 *  A15 (aka pin 69 for shiftOut function) connected to SH_CP of 74HC595 - clock pin
 * LEDs connected to the outputs of the shifter resisters represent the turnouts as thrown (red) or straight (green)
+
+
+Key sketch files (for Adruino IDE) are in the "src" folder.  The others are for Atom/PlatformIO IDE.
+
+Minimal changes were made to the master.  DCC++ serial communication protocol is the same, except for the addition of 'H' and 'J' commands for serial print of ESP-8266 commands for debugging, and DF Player control, respectively.
+
+Changes from DCC++:
+
+Config.h
+  35: Added COMM_INTERFACE = 4 for WiFi via ESP8266
+
+DCCpp_Mega.ino
+  4-32: Comments
+  291: init Serial3 at 115,200 baud for WiFi
+  305: added branch to announce SERIAL3
+
+DCCpp_Uno.h
+  102: COMM_TYPE = 0
+  103: INTERFACE Serial3
+
+Outputs.ccp
+  81-98: shift register and pin variables
+  223-259: set shift register and turnout pins
+  276-344: turnout pin write commands and logic
+  332-249: shiftRegister function: execute library commands for LEDs (library included in Arduino.h)
+
+Outputs.h
+  32: static void shiftRegister();
+  33: static void signal(byte, int, byte, byte);
+
+SerialCommand.ccp
+  28: #include "DFRobotDFPlayerMini.h"
+  38: DFRobotDFPlayerMini variable;
+  53-63: init Serial1 and DF Player
+  71-106: playSong function
+  178-196: added case "H", serial print ESP8266 output tagged with "H" command
+  192-194: added case "J", playSound(), command from ESP8288
+
+SerialCommand.h
+  25: playSound variable
+
 *
