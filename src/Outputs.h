@@ -32,7 +32,7 @@ struct Output{
   static void shiftRegister();
   static void signal(byte, int, byte, byte);
   static void store();
-  static Output *create(int, int, int, int=0);
+  static Output *create(int, int, int);
   static void show(int=0);
 }; // Output
   

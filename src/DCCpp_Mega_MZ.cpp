@@ -261,8 +261,6 @@ void setup(){
     digitalWrite(SDCARD_CS,HIGH);     // Deselect the SD card
   #endif
 
-  EEStore::init();                                          // initialize and load Turnout and Sensor definitions stored in EEPROM
-
   pinMode(A5,INPUT);                                       // if pin A5 is grounded upon start-up, print system configuration and halt
   digitalWrite(A5,HIGH);
   if(!digitalRead(A5))
@@ -311,6 +309,8 @@ void setup(){
     Serial.print(Ethernet.localIP());
     Serial.println(">");
   #endif
+
+  EEStore::init();                                          // initialize and load Turnout and Sensor definitions stored in EEPROM
 
   // CONFIGURE TIMER_1 TO OUTPUT 50% DUTY CYCLE DCC SIGNALS ON OC1B INTERRUPT PINS
 
@@ -526,7 +526,9 @@ ISR(TIMER3_COMPB_vect){              // set interrupt service for OCR3B of TIMER
 
 void showConfiguration(){
 
-  int mac_address[]=MAC_ADDRESS;
+  #if COMM_TYPE == 1
+    int mac_address[]=MAC_ADDRESS;
+  #endif
 
   Serial.print("\n*** DCC++ CONFIGURATION ***\n");
 

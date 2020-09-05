@@ -44,7 +44,8 @@ void SerialCommand::init(volatile RegisterList *_mRegs, volatile RegisterList *_
   mRegs=_mRegs;
   pRegs=_pRegs;
   mMonitor=_mMonitor;
-  sprintf(commandString,"");
+  // sprintf(commandString,"");
+  memset(commandString, 0, sizeof(commandString)); // clear commandString or commandString[0] = 0;
 
   /////////////////////////////////////////////////////////////////////////////
   // MP3 PLAYER SET-UP
@@ -122,7 +123,8 @@ void SerialCommand::process(){
     while(INTERFACE.available()>0){    // while there is data on the serial line
      c=INTERFACE.read();
      if(c=='<')                    // start of new command
-       sprintf(commandString,"");
+       // sprintf(commandString,"");
+       memset(commandString, 0, sizeof(commandString)); // clear commandString or commandString[0] = 0;
      else if(c=='>')               // end of new command
        parse(commandString);
      else if(strlen(commandString)<MAX_COMMAND_LENGTH)    // if comandString still has space, append character just read from serial line
@@ -162,10 +164,12 @@ void SerialCommand::process(){
  * t - Direction / Speed
  * w - Verification
  * B - Callback
+ * C - Cab editing - Used within ESP8266 script only
  * D - Change clock speed
  * E - EEPROM
  * F - free SRAM
  * H - Print iPHone data from ESP8266
+ * I - Show cabs and turnouts - Used within ESP8266 script only
  * J - DFPlayer Mini
  * L - List of track registers
  * M - Register

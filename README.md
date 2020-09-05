@@ -56,5 +56,3 @@ SerialCommand.ccp
 
 SerialCommand.h
   25: playSound variable
-
-*

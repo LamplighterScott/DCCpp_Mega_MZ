@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"name": "DCCpp_Mega_MZ",
+			"path": "."
+		},
+		{
+			"name": "FussenThrottleSafari",
+			"path": "../../FussenWeb/FussenThrottleSafari"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"atomic": "cpp",
+			"*.tcc": "cpp",
+			"fstream": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"sstream": "cpp"
+		}
+	}
+}
