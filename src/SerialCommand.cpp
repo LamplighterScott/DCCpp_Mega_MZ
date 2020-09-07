@@ -432,6 +432,7 @@ void SerialCommand::parse(char *com){
  */
      digitalWrite(SIGNAL_ENABLE_PIN_PROG,HIGH);
      digitalWrite(SIGNAL_ENABLE_PIN_MAIN,HIGH);
+     Output::illuminate(1);
      INTERFACE.print("<p1>");
      break;
 
@@ -445,6 +446,7 @@ void SerialCommand::parse(char *com){
  */
      digitalWrite(SIGNAL_ENABLE_PIN_PROG,LOW);
      digitalWrite(SIGNAL_ENABLE_PIN_MAIN,LOW);
+     Output::illuminate(0);
      INTERFACE.print("<p0>");
      break;
 

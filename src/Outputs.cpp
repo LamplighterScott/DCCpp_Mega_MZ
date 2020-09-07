@@ -93,7 +93,7 @@ the state of any outputs being monitored or controlled by a separate interface o
 
   //  ILLUMINATE LED'S
   //  MEGA shiftOut() to TI 74HC595N Shift Register IC's, 5v DC
-  const byte byteOfOne = 1;
+  // const byte byteOfOne = 1;
   // static byte switchByteA;
   // static byte switchByteB;
   int shiftBytes[4]={0};
@@ -176,7 +176,6 @@ Output *Output::create(int id, int pin, int iFlag){
 
 }  // end create
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 Output* Output::get(int n){
@@ -185,6 +184,18 @@ Output* Output::get(int n){
   return(tt);
 }  // end get
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Output::illuminate(bool light) {
+
+  if (light) {
+    digitalWrite(latchPin, HIGH);
+  } else {
+    digitalWrite(latchPin, LOW);
+  }
+
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -392,8 +403,8 @@ void Output::signal(byte oStatus, int id, byte pinOut, byte iFlag) {
   if (bitRead(iFlag, 3)) // Turnouts
   {
     byte secondSolenoidState = 0;  
-    if (oStatus<1) {
-      pinOut += 1;
+    if (oStatus>0) {
+      pinOut++;
       secondSolenoidState = 1;
     }
 
