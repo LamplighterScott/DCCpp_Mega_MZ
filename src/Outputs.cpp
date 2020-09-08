@@ -101,7 +101,8 @@ the state of any outputs being monitored or controlled by a separate interface o
 ///////////////////////////////////////////////////////////////////////////////
 
 void Output::activate(int s){
-  data.oStatus=(s>0);                                               // if s>0, set status to active, else inactive
+  data.oStatus=(s>0);
+                                                 // if s>0, set status to active, else inactive
   //int pinValue;                                                     // set state of output pin to HIGH or LOW depending on whether bit zero of iFlag is set to 0 (ACTIVE=HIGH) or 1 (ACTIVE=LOW)
   //pinValue = data.oStatus ^ bitRead(data.iFlag,0);
   //int pinToActivate = data.pin;
@@ -115,11 +116,11 @@ void Output::activate(int s){
   Output::signal(data.oStatus, data.id, data.pin, data.iFlag);
 
   if(num>0)
-    EEPROM.put(num,data.oStatus);
-  INTERFACE.print("<Y");
-  INTERFACE.print(data.id);
-  if(data.oStatus==0)
-    INTERFACE.print(" 0>");
+    // EEPROM.put(num,data.oStatus);
+    INTERFACE.print("<Y");
+    INTERFACE.print(data.id);
+    if(data.oStatus==0)
+      INTERFACE.print(" 0>");
   else
     INTERFACE.print(" 1>");
 
@@ -153,16 +154,17 @@ Output *Output::create(int id, int pin, int iFlag){
   tt->data.id=id;
   tt->data.pin=pin;
   tt->data.iFlag=iFlag;
-  tt->data.oStatus=0;
+  // tt->data.oStatus=bitRead(tt->data.iFlag,1)?bitRead(tt->data.iFlag,2):0;      // sets status to 0 (INACTIVE) if bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag
+  tt->data.oStatus=bitRead(iFlag,2);
+  // int oStatus = tt->data.oStatus;
 
-  tt->data.oStatus=bitRead(tt->data.iFlag,1)?bitRead(tt->data.iFlag,2):0;      // sets status to 0 (INACTIVE) is bit 1 of iFlag=0, otherwise set to value of bit 2 of iFlag
   int pinOutEven = tt->data.pin;
   int pinOutOdd = pinOutEven+1;
   pinMode(pinOutEven,OUTPUT);
   if (bitRead(iFlag, 3) || bitRead(iFlag, 5)) // Turnouts and signals
   {
     pinMode(pinOutOdd,OUTPUT);
-    signal(0, id, pin, iFlag);
+    signal(tt->data.oStatus, id, pin, iFlag);
   }
 
   // INTERFACE.println("<0>");
@@ -184,18 +186,6 @@ Output* Output::get(int n){
   return(tt);
 }  // end get
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Output::illuminate(bool light) {
-
-  if (light) {
-    digitalWrite(latchPin, HIGH);
-  } else {
-    digitalWrite(latchPin, LOW);
-  }
-
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -395,46 +385,34 @@ void Output::signal(byte oStatus, int id, byte pinOut, byte iFlag) {
 
   // For FussenWeb version N (Withrottle): convert one based to zero based; id 1 to x ==> pinBit 0 to x-1
 
-  int order = pinOut-22;
-  int byteNo = order/8;
+  int order = pinOut-22;  // 0-31
+  int byteNo = order/8; // 0-3
   int pinBit = order-8*byteNo;
   // Serial.println("Order: " + String(order) + " byteNo: " + String(byteNo) + " pinBit: " + String(pinBit));
 
   if (bitRead(iFlag, 3)) // Turnouts
   {
+    byte firstSolenoidState = 1;
     byte secondSolenoidState = 0;  
     if (oStatus>0) {
       pinOut++;
+      firstSolenoidState = 0;
       secondSolenoidState = 1;
     }
-
-    /*for(int i=0;i<3;i++){
-      digitalWrite(pinOut,HIGH);
-      delay(10);
-      digitalWrite(pinOut,LOW);
-      delay(10);
-    }*/
 
     digitalWrite(pinOut,HIGH);
     delay(20);
     digitalWrite(pinOut,LOW);
     delay(50);
 
-    
-    // NOR to invert only selected pin bit
-    // switchByteA ^= (byteOfOne << (pinBit));
-    // shiftBytes[byteNo] ^= (byteOfOne << (pinBit)); // invert rund/red/turnout
-    bitWrite(shiftBytes[byteNo], pinBit, oStatus); // set rund/red/turnout on/off
+    bitWrite(shiftBytes[byteNo], pinBit, firstSolenoidState); // set rund/red/turnout on/off
     if (pinBit<8) {
       pinBit++; 
-      
     } else if (byteNo<3) {
       byteNo++;
       pinBit=0;
     }
-    // shiftBytes[byteNo] ^= (byteOfOne << (pinBit)); // invert gerade/green/straight
     bitWrite(shiftBytes[byteNo], pinBit, secondSolenoidState); // set gerade/green/straight on/off
-    
 
   }
   else if (bitRead(iFlag, 4))  // Decouplers
@@ -453,18 +431,11 @@ void Output::signal(byte oStatus, int id, byte pinOut, byte iFlag) {
     delay(50);
     bitWrite(shiftBytes[byteNo], pinBit, oStatus);
 
-      // pinBit = id - 17;
-      // Serial.print("SwitchByteB pinBit: ");
-      // Serial.println(pinBit);
-      //switchByteB ^= (byteOfOne << (pinBit));
-      
-
   }
   else if (bitRead(iFlag, 5))  // Semaphores
   {
-    if (oStatus<1)
-    {
-      pinOut += 1;
+    if (oStatus>0) {
+      pinOut++;
     }
     
     digitalWrite(pinOut,HIGH);

@@ -27,7 +27,6 @@ struct Output{
   void activate(int s);
   static void parse(char *c);
   static Output* get(int);
-  static void illuminate(bool);
   static void remove(int);
   static void load();
   static void shiftRegister();
