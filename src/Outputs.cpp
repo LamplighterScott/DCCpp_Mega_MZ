@@ -237,7 +237,7 @@ void Output::load(){
     }
      
    */
-  #else
+  /*#else
 
     for(int i=0;i<EEStore::eeStore->data.nOutputs;i++){
       EEPROM.get(EEStore::pointer(),data);
@@ -248,7 +248,7 @@ void Output::load(){
       tt->num=EEStore::pointer();
       EEStore::advance(sizeof(tt->data));
     }
-
+*/
   #endif
 
 }  // end load

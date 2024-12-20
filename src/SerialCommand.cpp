@@ -57,8 +57,9 @@ void SerialCommand::init(volatile RegisterList *_mRegs, volatile RegisterList *_
   if (miniPlayer.begin(Serial1)) {
     delay(500);
     miniPlayer.volume(10);
-    miniPlayer.play(1);
-
+    delay(500);
+    miniPlayer.playFolder(1, 1);
+    
     if (Serial){
       Serial.print("");
       Serial.println("DFPlayer Mini Initiated");
@@ -71,45 +72,42 @@ void SerialCommand::init(volatile RegisterList *_mRegs, volatile RegisterList *_
 //////////////////////////////////////////////////////////////////////////////
 
 void SerialCommand::playSound(char *soundData){
-
+  char soundType;
   int functionNumber;
 
-  if (sscanf(soundData, "%i",&functionNumber) == 1) {
+  if (sscanf(soundData, "%c%i", &soundType, &functionNumber) == 2) {  // number of variables successfully filled
 
     //String printBuffer;
 
-    if (functionNumber<1){
-      //printBuffer = "Stop playing";
-      miniPlayer.stop();
+    switch (soundType){
+      case 'A':  // Alerts
+        miniPlayer.playFolder(1, functionNumber);
+      break;
 
-    } else if (functionNumber<2){
-      //printBuffer = "Sound DN";
-      miniPlayer.volumeDown();
+      case 'C':  // Commands
+        switch (functionNumber) {
+          case '0':
+          miniPlayer.stop();
+          break;
 
-    } else if (functionNumber<3){
-      //printBuffer = "Sound UP";
-      miniPlayer.volumeUp();
+          case '1':
+          miniPlayer.volumeDown();
+          break;
 
-    } else {
+          case '2':
+          miniPlayer.volumeUp();
+          break;
+        }
+      break;
 
-      functionNumber -= 2;
-      if (functionNumber<17){  // sounds start at index 3 in ESP8288, but 1 in DF Player
+      case 'L':  // Loop sounds
+        miniPlayer.playFolder(3, functionNumber);
+      break;
 
-      //printBuffer = "Play once item # "+String(functionNumber);
-      miniPlayer.play(functionNumber);
-
-      } else {
-        //printBuffer = "Loop item # "+String(functionNumber);
-        miniPlayer.loop(functionNumber);
-      }
-
+      case 'P':  // Play once sounds
+        miniPlayer.playFolder(2, functionNumber);
+      break;
     }
-
-    /*if (Serial){
-      String printString = "DF Player Number: " + String(functionNumber);
-      Serial.println(printString);
-      Serial.println(printBuffer);
-    }*/
   }
 } // SerialCommand::playSound
 
@@ -184,6 +182,9 @@ void SerialCommand::process(){
 
 void SerialCommand::parse(char *com){
 
+  String printText = com;
+  Serial.println(printText);
+
   switch(com[0]){
 
     //////////////////////////////////////////////////
@@ -201,7 +202,8 @@ void SerialCommand::parse(char *com){
     //////////////////////////////////////////////////
 
     case 'J':  // DF PLAYER MINI
-      playSound(com+1);
+      playSound(com+2);
+
     break;
 
 /***** SET ENGINE THROTTLES USING 128-STEP SPEED CONTROL ****/
@@ -433,6 +435,7 @@ void SerialCommand::parse(char *com){
      digitalWrite(SIGNAL_ENABLE_PIN_PROG,HIGH);
      digitalWrite(SIGNAL_ENABLE_PIN_MAIN,HIGH);
      INTERFACE.print("<p1>");
+     miniPlayer.playFolder(1, 2);
      break;
 
 /***** TURN OFF POWER FROM MOTOR SHIELD TO TRACKS  ****/
@@ -446,6 +449,7 @@ void SerialCommand::parse(char *com){
      digitalWrite(SIGNAL_ENABLE_PIN_PROG,LOW);
      digitalWrite(SIGNAL_ENABLE_PIN_MAIN,LOW);
      INTERFACE.print("<p0>");
+     miniPlayer.playFolder(1, 3);
      break;
 
 /***** READ MAIN OPERATIONS TRACK CURRENT  ****/

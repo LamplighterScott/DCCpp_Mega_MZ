@@ -1,29 +1,23 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
 {
     "configurations": [
         {
-            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
-        },
-        {
-            "name": "Mac",
-            "macFrameworkPath": [],
+            "name": "PlatformIO",
             "includePath": [
                 "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/include",
                 "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/src",
-                "/Users/scotteaton/Documents/Arduino/libraries/DFRobotDFPlayerMini",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/.pio/libdeps/megaatmega2560/DFRobotDFPlayerMini",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/variants/mega",
-                "/Users/scotteaton/Documents/Arduino/libraries/Adafruit_Circuit_Playground",
-                "/Users/scotteaton/Documents/Arduino/libraries/Adafruit_Circuit_Playground/utility",
-                "/Users/scotteaton/Documents/Arduino/libraries/arduinoWebSockets-master/src",
-                "/Users/scotteaton/.platformio/lib/ArduinoJson/src",
-                "/Users/scotteaton/.platformio/lib/ESP Async WebServer_ID306/src",
-                "/Users/scotteaton/.platformio/lib/TaskScheduler_ID721/src",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
-                "/Users/scotteaton/.platformio/packages/tool-unity",
                 ""
             ],
             "browse": {
@@ -31,26 +25,19 @@
                 "path": [
                     "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/include",
                     "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/src",
-                    "/Users/scotteaton/Documents/Arduino/libraries/DFRobotDFPlayerMini",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/.pio/libdeps/megaatmega2560/DFRobotDFPlayerMini",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/variants/mega",
-                    "/Users/scotteaton/Documents/Arduino/libraries/Adafruit_Circuit_Playground",
-                    "/Users/scotteaton/Documents/Arduino/libraries/Adafruit_Circuit_Playground/utility",
-                    "/Users/scotteaton/Documents/Arduino/libraries/arduinoWebSockets-master/src",
-                    "/Users/scotteaton/.platformio/lib/ArduinoJson/src",
-                    "/Users/scotteaton/.platformio/lib/ESP Async WebServer_ID306/src",
-                    "/Users/scotteaton/.platformio/lib/TaskScheduler_ID721/src",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
-                    "/Users/scotteaton/.platformio/packages/tool-unity",
                     ""
                 ]
             },
             "defines": [
-                "PLATFORMIO=50001",
+                "PLATFORMIO=60116",
                 "ARDUINO_AVR_MEGA2560",
                 "F_CPU=16000000L",
                 "ARDUINO_ARCH_AVR",
@@ -58,9 +45,8 @@
                 "__AVR_ATmega2560__",
                 ""
             ],
-            "intelliSenseMode": "clang-x64",
-            "cStandard": "c11",
-            "cppStandard": "c++11",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++11",
             "compilerPath": "/Users/scotteaton/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
             "compilerArgs": [
                 "-mmcu=atmega2560",

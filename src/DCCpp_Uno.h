@@ -100,7 +100,7 @@ Part of DCC++ BASE STATION for the Arduino
 #elif COMM_INTERFACE == 4
 
   #define COMM_TYPE 0 
-  #define INTERFACE Serial3
+  #define INTERFACE Serial3   // to ESP8266
 
 #elif (COMM_INTERFACE==1) || (COMM_INTERFACE==2) || (COMM_INTERFACE==3)
 

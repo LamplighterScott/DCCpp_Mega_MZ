@@ -1,10 +1,6 @@
 {
 	"folders": [
 		{
-			"name": "DCCpp_Mega_MZ",
-			"path": "."
-		},
-		{
 			"name": "FussenThrottleSafari",
 			"path": "../../FussenWeb/FussenThrottleSafari"
 		}

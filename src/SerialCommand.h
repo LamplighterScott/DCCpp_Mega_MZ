@@ -22,7 +22,7 @@ struct SerialCommand{
   static void init(volatile RegisterList *, volatile RegisterList *, CurrentMonitor *);
   static void parse(char *);
   static void process();
-  static void playSound(char *);
+  static void playSound(char *soundData);
 }; // SerialCommand
   
 #endif
