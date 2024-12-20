@@ -3,7 +3,7 @@
 
 DCC++ BASE STATION adpapted for Marklin Z
 
-VERSION 1.0.1  April 11, 2020 By Scott Eaton
+VERSION 1.1.0  Dekcember 20, 2024 By Scott Eaton
 
 * Even-numbered pins signal Close, next odd-numbered pins signal Throw
 * Momentary output signals (200ms)
