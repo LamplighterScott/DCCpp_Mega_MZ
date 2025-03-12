@@ -8,36 +8,36 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/include",
-                "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/src",
+                "/Users/scotteaton/Documents/Trains/Sketches (Latest)/BaseStation-master/DCCpp_Mega_MZ/include",
+                "/Users/scotteaton/Documents/Trains/Sketches (Latest)/BaseStation-master/DCCpp_Mega_MZ/src",
+                "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
-                "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/.pio/libdeps/megaatmega2560/DFRobotDFPlayerMini",
+                "/Users/scotteaton/Documents/Trains/Sketches (Latest)/BaseStation-master/DCCpp_Mega_MZ/.pio/libdeps/megaatmega2560/DFRobotDFPlayerMini",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/variants/mega",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 ""
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/include",
-                    "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/src",
+                    "/Users/scotteaton/Documents/Trains/Sketches (Latest)/BaseStation-master/DCCpp_Mega_MZ/include",
+                    "/Users/scotteaton/Documents/Trains/Sketches (Latest)/BaseStation-master/DCCpp_Mega_MZ/src",
+                    "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
-                    "/Users/scotteaton/Documents/Trains/BaseStation-master/DCCpp_Mega_MZ/.pio/libdeps/megaatmega2560/DFRobotDFPlayerMini",
+                    "/Users/scotteaton/Documents/Trains/Sketches (Latest)/BaseStation-master/DCCpp_Mega_MZ/.pio/libdeps/megaatmega2560/DFRobotDFPlayerMini",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/variants/mega",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                    "/Users/scotteaton/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     ""
                 ]
             },
             "defines": [
-                "PLATFORMIO=60116",
+                "PLATFORMIO=60117",
                 "ARDUINO_AVR_MEGA2560",
                 "F_CPU=16000000L",
                 "ARDUINO_ARCH_AVR",

@@ -434,8 +434,8 @@ void SerialCommand::parse(char *com){
  */
      digitalWrite(SIGNAL_ENABLE_PIN_PROG,HIGH);
      digitalWrite(SIGNAL_ENABLE_PIN_MAIN,HIGH);
-     INTERFACE.print("<p1>");
      miniPlayer.playFolder(1, 2);
+     INTERFACE.print("<p1>");
      break;
 
 /***** TURN OFF POWER FROM MOTOR SHIELD TO TRACKS  ****/
@@ -448,8 +448,8 @@ void SerialCommand::parse(char *com){
  */
      digitalWrite(SIGNAL_ENABLE_PIN_PROG,LOW);
      digitalWrite(SIGNAL_ENABLE_PIN_MAIN,LOW);
-     INTERFACE.print("<p0>");
      miniPlayer.playFolder(1, 3);
+     INTERFACE.print("<p0>");
      break;
 
 /***** READ MAIN OPERATIONS TRACK CURRENT  ****/

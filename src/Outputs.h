@@ -25,12 +25,13 @@ struct Output{
   struct OutputData data;
   Output *nextOutput;
   void activate(int s);
+  static void init();
   static void parse(char *c);
   static Output* get(int);
   static void remove(int);
   static void load();
   static void shiftRegister();
-  static void signal(byte, int, byte, byte);
+  static void signal(byte, int, int, byte);
   static void store();
   static Output *create(int, int, int);
   static void show(int=0);

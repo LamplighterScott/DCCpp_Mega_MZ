@@ -50,6 +50,12 @@ where
           IFLAG, bit 2:   0 = state of pin set to INACTIVE uponm power-up or when first created
                           1 = state of pin set to ACTIVE uponm power-up or when first created
 
+          IFLAG, bit 3:   1 = turnout
+          IFLAG, bit 4:   1 = decoupler
+          IFlAG, bit 5:   1 = semaphore, signal, roundtable, shed doors
+          IFLAG, bit 6:   1 = lights
+
+
 Once all outputs have been properly defined, use the <E> command to store their definitions to EEPROM.
 If you later make edits/additions/deletions to the output definitions, you must invoke the <E> command if you want those
 new definitions updated in the EEPROM.  You can also clear everything stored in the EEPROM by invoking the <e> command.
@@ -77,6 +83,8 @@ the state of any outputs being monitored or controlled by a separate interface o
 #include "EEStore.h"
 #include <EEPROM.h>
 #include "Comm.h"
+#include "Wire.h"
+
 
   // CHANGE SWITCH LIGHT
   // Arduino pins: 11,8,12
@@ -97,6 +105,30 @@ the state of any outputs being monitored or controlled by a separate interface o
   // static byte switchByteA;
   // static byte switchByteB;
   int shiftBytes[4]={0};
+
+  //  MCP2017 I/O expansion boards addresses
+  unsigned char boardAddresses[4] = {0x20,0x21,0x22,0x23};
+
+///////////////////////////////////////////////////////////////////////////////
+void Output::init() {
+
+//  Start up I2C for I/O Extender Boards used in Outputs with a MEGA
+Wire.begin();
+
+uint8_t boardAddresses[3]={0x20,0x22,0x23};
+for (int i=0; i<3; ++i) {
+  Wire.beginTransmission(boardAddresses[i]);
+  Wire.write(0x00); // IODIRA register
+  Wire.write(0x00); // Set all pins as outputs
+  Wire.endTransmission();
+  Wire.beginTransmission(boardAddresses[i]);
+  Wire.write(0x01); // IODIRB register
+  Wire.write(0x00); // Set all pins as outputs
+  Wire.endTransmission();
+  delay(5);
+}
+
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -376,7 +408,7 @@ void Output::show(int n){
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Output::signal(byte oStatus, int id, byte pinOut, byte iFlag) {
+void Output::signal(byte oStatus, int id, int pinOut, byte iFlag) {
 
   // ENERGIZE SWITCH AND DECOUPLER SOLENOIDS, 12v DC
   // MEGA pinouts to Toshiba ULN2803APG
@@ -385,25 +417,83 @@ void Output::signal(byte oStatus, int id, byte pinOut, byte iFlag) {
 
   // For FussenWeb version N (Withrottle): convert one based to zero based; id 1 to x ==> pinBit 0 to x-1
 
-  int order = pinOut-22;  // 0-31
-  int byteNo = order/8; // 0-3
-  int pinBit = order-8*byteNo;
+  int order = pinOut-22;  // order for LED shift registers starting with pin 22 as 0 shift register output number
+  int byteNo = order/8;  // determine which shift register IC
+  int pinBit = order-8*byteNo; // create bit address for LED
   // Serial.println("Order: " + String(order) + " byteNo: " + String(byteNo) + " pinBit: " + String(pinBit));
+
 
   if (bitRead(iFlag, 3)) // Turnouts
   {
     byte firstSolenoidState = 1;
-    byte secondSolenoidState = 0;  
-    if (oStatus>0) {
-      pinOut++;
-      firstSolenoidState = 0;
-      secondSolenoidState = 1;
+      byte secondSolenoidState = 0;  
+      if (oStatus>0) {
+        pinOut++;
+        firstSolenoidState = 0;
+        secondSolenoidState = 1;
+      }
+    
+    if (pinOut <100)  // Turnouts connected directly to Mega
+    {
+    // use main board pinouts connected to MOSFET Array 32 board 0
+      digitalWrite(pinOut,HIGH);
+      delay(20);
+      digitalWrite(pinOut,LOW);
+      delay(50);
+
+    } else  // Turnouts connected via I/O Extenders to MOSFET 32 Array boards 1 and 2
+    {
+      byte boardNumber = 0;  // Four expansion boards: 0, 1, 2, 3; board 1 reserved for future use
+      uint8_t portAddress = (pinOut % 2 == 0) ? 0x13 : 0x12;  // Assign even pinOuts to port B and odd pinouts to port A
+      int fromAddress = 0;
+      if (pinOut < 138)
+      {
+        // Board 0: A0, A1 and A2 all low - using only one I/O extender board on MOSFET 32 Array board 1
+        order = pinOut - 80;  // pinOut(x) - startAddress (122) + previousLastAddress (41) + 1
+        fromAddress = 122; // start of 8 bit series, use first address of series
+
+      /*} else if (pinOut < 154)  // exansion board 1 not implemented yet
+      {
+          boardNumber = 1; // A0 high - second extender boards on MOSFET 32 Array board 1
+          order = pinOut - 80;  // same LED shift registrer offset as expansion board 0
+          fromAddress = 153;  // Last address used because pins order is reversed for second expansion board
+      */
+      } else if (pinOut < 238) 
+      {
+        boardNumber = 2; // A1 high - one of two extender boards on MOSFET 32 Array board 2
+        order = pinOut - 84;  // increase offset by 4 for two more dual solenoid non-LED users
+        fromAddress = 222; // first address of series
+  
+      } else
+      {
+        boardNumber = 3; // A0 and A1 high - secondo extender boards on MOSFET 32 Array board 2
+        order = pinOut - 84;  // same LED shift registrer offset as expansion board 2
+        fromAddress = 253;  // Last address used because pin order is reversed for second expansion board
+      }
+
+      int pinAddress = 1 << ((abs(fromAddress-pinOut))/2); // create 8-bit binary for pin address
+
+      // Energize turnout solenoid
+      uint8_t boardAddress = boardAddresses[boardNumber];
+      Serial.println("boardAdress: " + String(boardAddress) + " portAddress: " + String(portAddress) + " pinAddress: " + String(pinAddress));
+      Wire.beginTransmission(boardAddress);
+      Wire.write(portAddress); // address port
+      Wire.write(pinAddress);  // value to send
+      Wire.endTransmission();
+      delay(10);
+
+      // De-energize turnout solenoids
+      Wire.beginTransmission(boardAddress);
+      Wire.write(portAddress); // address port
+      Wire.write(0);  // value to send
+      Wire.endTransmission();
+      delay(20);
+
     }
 
-    digitalWrite(pinOut,HIGH);
-    delay(20);
-    digitalWrite(pinOut,LOW);
-    delay(50);
+    // Recalculate pinBit because order might have been altered
+    byteNo = order/8;  // determine which shift register IC
+    pinBit = order-8*byteNo; // create bit address for LED
 
     bitWrite(shiftBytes[byteNo], pinBit, firstSolenoidState); // set rund/red/turnout on/off
     if (pinBit<8) {
@@ -432,7 +522,7 @@ void Output::signal(byte oStatus, int id, byte pinOut, byte iFlag) {
     bitWrite(shiftBytes[byteNo], pinBit, oStatus);
 
   }
-  else if (bitRead(iFlag, 5))  // Semaphores
+  else if (bitRead(iFlag, 5))  // Semaphores, turntable, sheds
   {
     if (oStatus>0) {
       pinOut++;

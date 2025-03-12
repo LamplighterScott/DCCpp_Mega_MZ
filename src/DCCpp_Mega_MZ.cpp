@@ -3,7 +3,7 @@
 
 DCC++ BASE STATION adpapted for Marklin Z
 
-VERSION 1.1.0  Dekcember 20, 2024 By Scott Eaton
+VERSION 1.1.0  December 20, 2024 By Scott Eaton
 
 * Even-numbered pins signal Close, next odd-numbered pins signal Throw
 * Momentary output signals (200ms)
@@ -210,6 +210,7 @@ DCC++ BASE STATION is configured through the Config.h file that contains all use
 #include "EEStore.h"
 #include "Config.h"
 #include "Comm.h"
+#include "Outputs.h"
 
 void showConfiguration();
 
@@ -429,6 +430,9 @@ void setup(){
   progRegs.loadPacket(1,RegisterList::idlePacket,2,0);    // load idle packet into register 1
 
   bitSet(TIMSK3,OCIE3B);    // enable interrupt vector for Timer 3 Output Compare B Match (OCR3B)
+
+  //  Start up I2C for I/O Extender Boards used in Outputs with a MEGA
+ Output::init();
 
 #endif
 
